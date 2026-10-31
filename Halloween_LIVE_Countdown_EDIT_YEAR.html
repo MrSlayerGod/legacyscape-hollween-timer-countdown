@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Halloween Drop Party • Live Countdown</title>
+<style>
+:root { color-scheme: dark; --orange:#ffac55; --cream:#fff1e4; --violet:#b68ed3; }
+* { box-sizing:border-box; }
+body {margin:0;min-height:100vh;color:var(--cream);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(ellipse at 80% 5%,#50264d,transparent 55%),radial-gradient(ellipse at 10% 100%,#291845,transparent 60%),#10101e;display:grid;place-items:center;padding:28px 14px;}
+.frame{width:min(100%,1000px);position:relative;overflow:hidden;border-radius:26px;border:1px solid #745080;background:linear-gradient(130deg,#281634ee,#141324ee);box-shadow:0 20px 80px #0009;}
+.frame::before{content:"";position:absolute;right:-100px;top:-125px;width:540px;height:540px;border-radius:50%;background:radial-gradient(circle,#ffb05f77 0 24%,#e2674940 40%,transparent 68%);pointer-events:none;}
+.frame::after{content:"🦇";position:absolute;right:6%;top:7%;font-size:60px;opacity:.37;transform:rotate(-18deg);pointer-events:none;}
+header,main,footer{position:relative;z-index:1}
+header{padding:40px 46px 0}
+.tag{display:inline-block;border:1px solid #a66b78;border-radius:30px;padding:9px 16px;letter-spacing:2px;color:#ffc993;font-weight:800;font-size:12px;background:#efa55a18;}
+h1{font-size:clamp(42px,9vw,93px);line-height:.95;letter-spacing:-.05em;margin:27px 0 11px;font-weight:950;}
+h1 span{display:block;color:var(--orange);}
+.subtitle{color:#d8c9dd;letter-spacing:2.4px;font-size:clamp(11px,2.3vw,17px);font-weight:700;}
+main{padding:25px 46px 32px}
+.liveLabel{font-size:13px;letter-spacing:2.5px;color:#d9c1e9;font-weight:800;margin:9px 0 13px;}
+.clock{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+.clockBox{background:#0d0d1ebc;border:1px solid #785889;border-radius:14px;min-width:0;text-align:center;padding:22px 6px 18px;}
+.value{color:#ffb15f;font-size:clamp(28px,6vw,68px);font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-2px;line-height:1.15;}
+.unit{font-weight:800;letter-spacing:1.7px;color:#c7b1d2;font-size:11px;margin-top:9px;}
+.datetime{display:flex;align-items:center;flex-wrap:wrap;gap:10px;color:#fff0e3;margin:20px 0 0;font-weight:750;font-size:18px;}
+.timeChip{padding:8px 14px;background:var(--orange);border-radius:10px;color:#321e29;font-weight:900;}
+.status{margin-top:12px;color:#a9f0af;font-size:15px;font-weight:700;min-height:22px;}
+footer{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 46px 40px}
+.panel{border-radius:15px;padding:20px;background:#34233fbb;border:1px solid #865c85;}
+.panel strong{font-size:16px;color:#ffbb78;letter-spacing:.7px;}
+.panel p{margin:8px 0 0;font-size:14px;line-height:1.6;color:#f4eaf4;}
+.free{background:#214232aa;border-color:#6ca57b;}.free strong{color:#c6ffb7}
+.warning{text-align:center;font-weight:850;letter-spacing:.5px;color:#ffc099;font-size:13px;margin:0 0 24px;}
+.editHelp{max-width:1000px;margin:14px auto 0;font-size:12px;color:#bdb1c5;text-align:center;line-height:1.6;}
+@media(max-width:600px){header{padding:28px 19px 0}main{padding:17px 19px 24px}footer{padding:0 19px 24px;grid-template-columns:1fr}.clock{gap:6px}.clockBox{padding:17px 3px 14px}.unit{font-size:9px;letter-spacing:.5px}.datetime{font-size:15px}.tag{font-size:10px}}
+</style></head>
+<body>
+<div style="width:min(100%,1000px)"><div class="frame">
+<header><div class="tag">🎃 <span id="eventyear">2026</span> • SERVER HALLOWEEN EVENT</div><h1><span>HALLOWEEN</span>DROP PARTY</h1><div class="subtitle">CLASSIC RUNESCAPE HALLOWEEN LOOT</div></header>
+<main><div class="liveLabel">⏳ LIVE COUNTDOWN TO THE DROP</div>
+<div class="clock" role="timer" aria-label="Time until the Halloween Drop Party">
+<div class="clockBox"><div class="value" id="days">--</div><div class="unit">DAYS</div></div>
+<div class="clockBox"><div class="value" id="hours">--</div><div class="unit">HOURS</div></div>
+<div class="clockBox"><div class="value" id="minutes">--</div><div class="unit">MINUTES</div></div>
+<div class="clockBox"><div class="value" id="seconds">--</div><div class="unit">SECONDS</div></div></div>
+<div class="datetime"><span id="eventdate">31 OCTOBER 2026</span><span class="timeChip">20:00 GMT</span><span>SERVER TIME</span></div>
+<div class="status" id="status">Getting the countdown ready…</div></main>
+<footer><div class="panel"><strong>🎭 HALLOWEEN DROPS</strong><p>1x of each Halloween Mask<br>Pumpkin • Halloween Scythe</p></div><div class="panel free"><strong>💀 FREE SKELETON OUTFIT</strong><p>Every player who arrives gets one!</p></div></footer>
+<div class="warning">⚠️ DO NOT EAT THE PUMPKIN — IT WORKS!</div>
+</div><p class="editHelp">This HTML countdown works offline and automatically changes to the next Halloween every year. Edit the EVENT SETTINGS in the file to change the date, hour, time zone or rewards.</p></div>
+<script>
+/* =====================================================
+   EVENT SETTINGS: EDIT THESE TO REUSE YOUR COUNTDOWN
+   Dates use the server's timezone, expressed as an offset from UTC.
+   Example: GMT/UTC = 0; UTC+1 = 1; UTC-5 = -5.
+   ===================================================== */
+const EVENT_SETTINGS = {
+  month: 10,
+  day: 31,
+  hour: 20,
+  minute: 0,
+  serverUtcOffsetHours: 0,
+  annualRepeat: true,
+  firstYear: 2026
+};
+const $=id=>document.getElementById(id);
+function targetForYear(y){const s=EVENT_SETTINGS;return Date.UTC(y,s.month-1,s.day,s.hour-s.serverUtcOffsetHours,s.minute,0);}
+function tick(){
+  const now=Date.now(), s=EVENT_SETTINGS;
+  let year=s.annualRepeat?new Date(now).getUTCFullYear():s.firstYear;
+  if(s.annualRepeat && now>targetForYear(year)+4*3600000) year++;
+  const target=targetForYear(year),diff=Math.max(0,target-now);
+  const sec=Math.floor(diff/1000);
+  [['days',Math.floor(sec/86400)],['hours',Math.floor(sec%86400/3600)],['minutes',Math.floor(sec%3600/60)],['seconds',sec%60]].forEach(([id,n])=>$(id).textContent=String(n).padStart(2,'0'));
+  $('eventyear').textContent=year;
+  $('eventdate').textContent=`${String(s.day).padStart(2,'0')} ${new Date(Date.UTC(year,s.month-1,s.day)).toLocaleDateString('en-GB',{month:'long',timeZone:'UTC'}).toUpperCase()} ${year}`;
+  const offset=s.serverUtcOffsetHours===0?'GMT':`UTC${s.serverUtcOffsetHours>0?'+':''}${s.serverUtcOffsetHours}`;
+  document.querySelector('.timeChip').textContent=`${String(s.hour).padStart(2,'0')}:${String(s.minute).padStart(2,'0')} ${offset}`;
+  $('status').textContent=now>=target?(now<target+4*3600000?'🎉 THE HALLOWEEN DROP PARTY IS LIVE!':'Event finished'):(diff<3600000?'🔥 LESS THAN ONE HOUR TO GO!':'🎃 GET READY — THE DROP IS COMING!');
+}
+tick();setInterval(tick,1000);
+</script></body></html>
